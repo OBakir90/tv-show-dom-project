@@ -1,3 +1,80 @@
-#root {
-  color: red;
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #e3ded9;
+}
+
+.dark_brwn {
+  background-color: #bba686;
+  color: #8aa4ab
+}
+
+.light_brwn {
+  background-color: #e3ded9;
+  color: #416270
+}
+
+.dark_blue {
+  background-color: #416270;
+  color: #e3ded9
+}
+
+.light_blue {
+  background-color: #8aa4ab;
+  color: #000
+}
+
+#header {
+  display: flex;
+  justify-content: space-between;
+  height: 12vh;
+  align-items: center;
+  padding: 0 15px 0 15px
+}
+
+#user a {
+  padding-right: 15px;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+#main_boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.showbox {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 1px 1px 10px;
+  width: 30%;
+  padding: 10px;
+  border: #416270 solid 1px;
+  border-radius: 1%;
+}
+
+.showbox h2 {
+  display: flex;
+  justify-content: center;
+}
+
+#episode_select {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+/* Media Queries */
+
+@media only screen and (max-width: 480px) {
+  #main_boxes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .showbox {
+    width: 80%;
+  }
 }

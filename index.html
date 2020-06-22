@@ -5,13 +5,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TV Show Project | Orhan (OBakir90)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
   <link href="style.css" rel="stylesheet" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 
 <body>
-  <div id="root">
-  </div>
+  <section id="header" class="light_blue">
+    <div id="logo">
+      <img src="favicon.ico" alt="">
+    </div>
+    <div id="header_middle">
+      <div id="search_form" class="ui icon input">
+        <input type="text" placeholder="Search...">
+        <i class="circular search link icon"></i>
+      </div>
+    </div>
+    <div id="user">
+      <a class="light_blue" href="#">Login</a>
+      <a class="light_blue" href="#">Register</a>
+    </div>
+  </section>
+  <section id="episode_select">
+    <div class="ui form">
+      <div class="field">
+        <label>Select Episode</label>
+        <select class="ui dropdown">
+          <option value="">Episodes</option>
+        </select>
+      </div>
+    </div>
+    <div id="display_number">
+      <p></p>
+    </div>
+  </section>
+  <section id="main">
+    <div id="main_boxes">
+    </div>
+  </section>
+
+
+
 
   <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
   <script src="episodes.js"></script>
