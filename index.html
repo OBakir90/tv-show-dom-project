@@ -5,15 +5,62 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TV Show Project | Orhan (OBakir90)</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
   <link href="style.css" rel="stylesheet" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 
 <body>
-  <section id="header" class="light_blue">
+  <section id="header">
     <div id="logo">
       <img src="favicon.ico" alt="">
+    </div>
+  </section>
+  <section class="most_rated_shows">
+    <div>
+      <h1>MOST RATED SHOWS</h1>
+    </div>
+    <div id="mr_boxes">
+      <div class="box">
+        <img src="" alt="">
+        <p class="show_name"></p>
+        <p class="rating"></p>
+      </div>
+      <div class="box">
+        <img src="" alt="">
+        <p class="show_name"></p>
+        <p class="rating"></p>
+      </div>
+      <div class="box">
+        <img src="" alt="">
+        <p class="show_name"></p>
+        <p class="rating"></p>
+      </div>
+      <div class="box">
+        <img src="" alt="">
+        <p class="show_name"></p>
+        <p class="rating"></p>
+      </div>
+      <div class="box">
+        <img src="" alt="">
+        <p class="show_name"></p>
+        <p class="rating"></p>
+      </div>
+    </div>
+  </section>
+  <section id="episode_select">
+    <div class="space"></div>
+    <div class="ui form">
+      <div class="field">
+        <label>Sort By</label>
+        <select class="ui dropdown">
+          <option value="">Shows</option>
+          <option value="compare_date">Newest</option>
+          <option value="compare_rate">Rating</option>
+        </select>
+      </div>
     </div>
     <div id="header_middle">
       <div id="search_form" class="ui icon input">
@@ -21,32 +68,27 @@
         <i class="circular search link icon"></i>
       </div>
     </div>
-    <div id="user">
-      <a class="light_blue" href="#">Login</a>
-      <a class="light_blue" href="#">Register</a>
-    </div>
-  </section>
-  <section id="episode_select">
-    <div class="ui form">
-      <div class="field">
-        <label>Select Episode</label>
-        <select class="ui dropdown">
-          <option value="">Episodes</option>
-        </select>
-      </div>
-    </div>
     <div id="display_number">
       <p></p>
     </div>
   </section>
+
   <section id="main">
+    <div id="main_side">
+      <h4 id="show_types">Show Types</h4>
+      <div id="show_type_box">
+      </div>
+      <h4 id="show_genres">Show Genres</h4>
+      <div id="show_genres_box">
+      </div>
+    </div>
     <div id="main_boxes">
     </div>
   </section>
 
 
 
-
+  <script src="main.js"></script>
   <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
   <script src="episodes.js"></script>
 

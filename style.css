@@ -2,21 +2,21 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #e3ded9;
+  background-color: #000;
 }
 
 .dark_brwn {
-  background-color: #bba686;
+  background-color: #2C7873;
   color: #8aa4ab
 }
 
 .light_brwn {
-  background-color: #e3ded9;
-  color: #416270
+  background-color: #004445;
+  color: #6FB98F
 }
 
 .dark_blue {
-  background-color: #416270;
+  background-color: #021C1E;
   color: #e3ded9
 }
 
@@ -28,26 +28,82 @@ body {
 #header {
   display: flex;
   justify-content: space-between;
-  height: 12vh;
+  background-color: #021C1E;
+  height: 15vh;
   align-items: center;
   padding: 0 15px 0 15px
 }
 
-#user a {
-  padding-right: 15px;
-  font-size: 1.5em;
+.ui.form .field>label {
+  color: #e3ded9;
+}
+
+.most_rated_shows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px;
+}
+
+#mr_boxes {
+  display: flex;
+  width: 90%;
+  justify-content: space-between;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  color: wheat;
+  font-size: 2em;
   font-weight: bold;
+}
+
+#display_number p {
+  color: #e3ded9;
+}
+
+.box p {
+  color: white;
+  font-size: 1.5em;
+}
+
+.most_rated_shows img {
+  width: 150px;
+  height: 150px;
+  margin: 5px;
+  border-radius: 80%;
+}
+
+#main {
+  display: flex;
+  margin-top: 30px;
 }
 
 #main_boxes {
   display: flex;
+  width: 75%;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.showbox {
+#main_side {
+  flex: 2;
+  width: 25%;
+  margin-left: 5px;
+  color: aliceblue;
+  border-right: #e3ded9 solid 2px;
+}
+
+.showBox {
   display: flex;
   flex-direction: column;
+  perspective: 1000px;
+  background-image: linear-gradient(#416270, #e3ded9, #021C1E);
   margin: 10px 1px 1px 10px;
   width: 30%;
   padding: 10px;
@@ -55,9 +111,40 @@ body {
   border-radius: 1%;
 }
 
-.showbox h2 {
+.showInBox {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.rate {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.showName {
+  margin: 0;
+  padding: 0;
+}
+
+.space {
+  width: 10%;
+}
+
+#show_type_box {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.ui.checkbox label {
+  color: antiquewhite;
+}
+
+img {
+  border-radius: 1%;
+  opacity: 0.8;
 }
 
 #episode_select {
