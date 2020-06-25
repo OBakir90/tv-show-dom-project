@@ -10,7 +10,7 @@ let genresSelectBox = document.querySelector("#show_genres_box")
 
 function fetchedData() {
     main.innerHTML = ""
-    fetch("http://api.tvmaze.com/shows")
+    fetch("https://api.tvmaze.com/shows")
         .then(res => res.json())
         .then(shows => {
             selectShowType(shows)
