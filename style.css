@@ -99,6 +99,23 @@ h1 {
   border-right: #e3ded9 solid 2px;
 }
 
+/* Pagination */
+
+#pageNumber {
+  display: flex;
+  margin-top: 10px;
+  padding: 0;
+  background-color: #e3ded9;
+  color: black;
+  list-style-type: none;
+  cursor: pointer;
+}
+
+#pageNumber>li {
+  border: 1px solid black;
+  padding: 10px;
+}
+
 .showBox {
   display: flex;
   flex-direction: column;
@@ -138,12 +155,32 @@ h1 {
   margin-left: 10px;
 }
 
+.showCastBox {
+  border: #e3ded9 2px solid;
+  display: flex;
+  color: aliceblue;
+  margin: 5%;
+}
+
+.detailBox>h3>span {
+  color: #885929;
+}
+
 .ui.checkbox label {
-  color: antiquewhite;
+  color: whitesmoke;
+}
+
+.ui.checkbox input:checked {
+  color: black;
+}
+
+.ui.checkbox label:hover {
+  color: wheat;
 }
 
 img {
   border-radius: 1%;
+  margin: 15px;
   opacity: 0.8;
 }
 
@@ -151,6 +188,84 @@ img {
   display: flex;
   justify-content: space-between;
   margin: 10px;
+}
+
+.season_screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #021C1E;
+}
+
+.seasonsBox {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 5%;
+  margin-left: 5%;
+  color: aliceblue;
+}
+
+.seasonBox {
+  display: flex;
+  /* flex-wrap: wrap; */
+  flex-basis: 40%;
+  margin-right: 55%;
+  background-image: linear-gradient(to right, #416270, #e3ded9, #021C1E);
+  max-width: 150px;
+  font-size: 1rem;
+}
+
+.seasonDownBox>.description {
+  max-height: 100px;
+  overflow-y: scroll;
+}
+
+.seasonNumber {
+  font-size: 18px;
+}
+
+.episodeOrder {
+  font-size: 16px
+}
+
+.seasonBox>img {
+  margin-right: 20px;
+  border-radius: 1%;
+}
+
+.seasonNumberBox {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.seasonNumber {
+  margin: 0;
+  padding: 0;
+}
+
+/*Season Cast Box*/
+
+.castsBox {
+  display: flex;
+  margin-Top: '10px';
+}
+
+.castBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.castCharacterName {
+  font-size: 1.2rem;
+  color: #885929;
+}
+
+.castPersonName {
+  color: antiquewhite;
 }
 
 /* Media Queries */

@@ -1,30 +1,53 @@
-let main = document.querySelector("#main_boxes")
-let mrShowBox = document.querySelectorAll(".box")
-let image = document.querySelectorAll(".box img")
-let mrShowName = document.querySelectorAll(".show_name")
-let mrRating = document.querySelectorAll(".rating")
-let sorting = document.querySelector(".dropdown")
-let typeSelectBox = document.querySelector("#show_type_box")
-let genresSelectBox = document.querySelector("#show_genres_box")
-// let selectTypeInput = document.querySelectorAll(".checkbox")
+const main = document.querySelector("#main_boxes")
+const side = document.querySelector("#main_side")
+const mrShowBox = document.querySelectorAll(".box")
+const image = document.querySelectorAll(".box img")
+const mrShowName = document.querySelectorAll(".show_name")
+const mrRating = document.querySelectorAll(".rating")
+const sorting = document.querySelector(".dropdown")
+const typeSelectBox = document.querySelector("#show_type_box")
+const genresSelectBox = document.querySelector("#show_genres_box")
+const selectTypeInput = document.querySelectorAll(".checkbox")
+const sortForm = document.querySelector("div.ui.form")
+const space = document.querySelector("div.space")
+const seasonScreen = document.querySelector(".season_screen")
+const showMainDiv = document.querySelector("#main_boxes")
+
+
+let allshows;
+fetch("https://api.tvmaze.com/shows")
+    .then(res => res.json())
+    .then(shows => {
+        allshows = shows
+    })
 
 function fetchedData() {
     main.innerHTML = ""
+    seasonScreen.style.display = "none"
     fetch("https://api.tvmaze.com/shows")
         .then(res => res.json())
         .then(shows => {
-            selectShowType(shows)
-            selectGenresType(shows)
-            displayAllMovies(shows)
-            displayMostRated(shows)
+            console.log("onload")
+            if (allshows) {
+                selectShowType(allshows)
+                displayAllMovies(allshows)
+                displayMostRated(allshows)
+            }
         }
         )
 }
 
 
+//CREATE NEW ELEMENT
+
 function createElement(type, clsName) {
     let element = document.createElement(type);
     element.className += clsName;
+    return element;
+}
+function createElementId(type, idName) {
+    let element = document.createElement(type);
+    element.id = idName
     return element;
 }
 
@@ -33,15 +56,53 @@ function createElement(type, clsName) {
 function displayMostRated(shows) {
     let sortedShows = shows.sort(compareRate)
     sortedShows.forEach((show, index) => {
-        image[index].src = show.image.medium
-        mrShowName[index].innerText = show.name
-        mrRating[index].innerText = show.rating.average
+        if (image[index]) {
+            image[index].src = show.image.medium
+        }
+        if (mrShowName[index]) {
+            mrShowName[index].innerText = show.name
+        }
+        if (mrRating[index]) {
+            mrRating[index].innerText = show.rating.average
+        }
     })
 }
 
 //DISPLAY ALL SHOWS ON MAIN
 
 let displayAllMovies = (shows) => {
+    main.innerHTML = ""
+    let perPage = 30
+    let currentPage = 1
+    makePagination(shows, perPage, currentPage)
+    // displayNumber(shows, shows)
+}
+
+function makePagination(shows, perPage, currentPage) {
+    console.log(currentPage)
+    let pageNumberList = document.getElementById("pageNumber")
+    let pageNumber = Math.ceil(shows.length / perPage)
+    let loopStart = perPage * currentPage
+    let loopEnd = loopStart + perPage
+    let showsPerPage = shows.slice(loopStart, loopEnd)
+    for (let i = 0; i < pageNumber; i++) {
+        var button = createElement("button", "pageNumber")
+        button.innerText = i + 1
+        pageNumberList.appendChild(button)
+        handlePagination(i, button, showsPerPage, currentPage)
+    }
+    createShows(showsPerPage)
+}
+
+function handlePagination(i, button, showsPerPage, currentPage) {
+    button.addEventListener("click", () => {
+        currentPage = i + 1
+        console.log("i", i, "current page", currentPage)
+        displayAllMovies(allshows)
+    })
+}
+
+function createShows(shows) {
     shows.forEach(show => {
         let showBox = createElement("div", "showBox")
         let showInBox = createElement("div", "showInBox")
@@ -65,64 +126,75 @@ let displayAllMovies = (shows) => {
         showBox.appendChild(showDownBox)
         main.appendChild(showBox)
     })
-    displayNumber(shows, shows)
 }
 
 //Sorting Shows 
 
 sorting.addEventListener("change", (e) => {
-    fetch("http://api.tvmaze.com/shows")
-        .then(res => res.json())
-        .then(shows => {
-            let sortBy = e.target.value
-            sortingShows(sortBy, shows)
-        })
+    if (allshows) {
+        console.log(allshows)
+        let sortBy = e.target.value
+        sortingShows(sortBy, allshows)
+    }
 })
 
 function sortingShows(compare, shows) {
     if (compare === "") {
-        showSorted(shows)
+        displayAllMovies(shows)
     }
     if (compare === "compare_date") {
         let sortedShows = shows.sort(compareDate)
-        showSorted(sortedShows)
+        displayAllMovies(sortedShows)
     }
     if (compare === "compare_rate") {
         let sortedShows = shows.sort(compareRate)
-        showSorted(sortedShows)
+        displayAllMovies(sortedShows)
     }
-}
-
-function showSorted(sortedShows) {
-    main.innerHTML = ""
-    sortedShows.forEach(show => {
-        let showBox = createElement("div", "showBox")
-        let showInBox = createElement("div", "showInBox")
-        let showDownBox = createElement("div", "showDownBox")
-        let image = createElement("img", "src")
-        let rate = createElement("p", "rate")
-        let summary = createElement("h3", "summary")
-        let description = createElement("p", "description")
-        let showName = createElement("h2", "showName")
-        summary.innerText = "Summary"
-        description.innerHTML = show.summary
-        showName.innerText = show.name
-        image.src = show.image.medium
-        rate.innerText = show.rating.average
-        showInBox.appendChild(showName)
-        showInBox.appendChild(rate)
-        showDownBox.appendChild(summary)
-        showDownBox.appendChild(description)
-        showBox.appendChild(showInBox)
-        showBox.appendChild(image)
-        showBox.appendChild(showDownBox)
-        main.appendChild(showBox)
-    })
-    displayNumber(sortedShows, sortedShows)
 }
 
 //SELECT SHOW TYPE
 function selectShowType(shows) {
+    typeObjet = getShowTypeObject(shows)
+    let showTypes = Object.keys(typeObjet)
+    let typeNumbers = Object.values(typeObjet)
+    createShowTypeDiv(showTypes, typeNumbers)
+}
+
+function createShowTypeDiv(showTypes, typeNumbers) {
+    const typeForm = createElement("div", "ui form")
+    const headlabel = createElement("label", "headLabel")
+    const groupedFields = createElement("div", "grouped fields")
+    const typelabel = createElementId("label", `alltypes`)
+    const checkboxDiv = createElement("div", "ui radio checkbox alltypes")
+    const input = createElementId("div", `alltypes`)
+    input.setAttribute("type", "radio")
+    input.setAttribute("checked", "checked")
+    const field = createElement("div", "field")
+    field.appendChild(checkboxDiv)
+    checkboxDiv.appendChild(input)
+    checkboxDiv.appendChild(typelabel)
+    typeForm.appendChild(headlabel)
+    typeForm.appendChild(groupedFields)
+    groupedFields.appendChild(checkboxDiv)
+    headlabel.innerText = "Select A Show Type"
+    typelabel.innerText = `All Shows(${allshows.length})`
+    showTypes.forEach((type, index) => {
+        const field = createElement("div", "field")
+        const checkboxDiv = createElement("div", "ui radio checkbox")
+        const input = createElementId("div", `${type.replace(" ", "").toLowerCase()}`)
+        input.setAttribute("type", "radio")
+        const typelabel = createElementId("label", `${type.replace(" ", "").toLowerCase()}`)
+        typelabel.style.hover = "white"
+        typelabel.innerText = `${type}(${typeNumbers[index]})`
+        groupedFields.appendChild(field)
+        field.appendChild(checkboxDiv)
+        checkboxDiv.appendChild(input)
+        checkboxDiv.appendChild(typelabel)
+        typeSelectBox.appendChild(typeForm)
+    })
+}
+
+function getShowTypeObject(shows) {
     let types = [];
     shows.forEach(p => {
         types.push(p.type)
@@ -135,152 +207,37 @@ function selectShowType(shows) {
         }
         return acc;
     }, {});
-    let showTypes = Object.keys(typeObjet)
-    let typeNumbers = Object.values(typeObjet)
-    showTypes.forEach((p, i) => {
-        let selectTypeDiv = createElement("div", "ui checkbox selectType")
-        let selectTypeInput = createElement("input", `${p.replace(" ", "").toLowerCase()}`)
-        selectTypeInput.setAttribute("type", "checkbox")
-        let selectTypeLabel = createElement("label", "type_label")
-        selectTypeDiv.appendChild(selectTypeInput)
-        selectTypeDiv.appendChild(selectTypeLabel)
-        typeSelectBox.appendChild(selectTypeDiv)
-        selectTypeLabel.innerText = `${p}(${typeNumbers[i]})`
-    }
-    )
+    return typeObjet
 }
-let selected = false;
 typeSelectBox.addEventListener("click", function (e) {
-    fetch("http://api.tvmaze.com/shows")
-        .then(res => res.json())
-        .then(shows => {
-            if (e.target && e.target.matches("input.scripted") && selected == false) {
-                let scriptedShows = shows.filter(show => show.type == "Scripted")
-                showSorted(scriptedShows)
-                selected = true
-            }
-            if (e.target && e.target.matches("input.reality")) {
-                let realityShows = shows.filter(show => show.type == "Reality")
-                showSorted(realityShows)
-                selected = true
-            }
-            if (e.target && e.target.matches("input.animation")) {
-                let animationShows = shows.filter(show => show.type == "Animation")
-                showSorted(animationShows)
-                selected = true
-            }
-            if (e.target && e.target.matches("input.talkshow")) {
-                let talkshowShows = shows.filter(show => show.type == "Talk Show")
-                showSorted(talkshowShows)
-                selected = true
-            }
-            if (e.target && e.target.matches("input.documentary")) {
-                let documentaryShows = shows.filter(show => show.type == "Documentary")
-                showSorted(documentaryShows)
-                selected = true
-            }
-        })
+    let selectedShows = []
+    if (e.target.id === "alltypes") {
+        selectedShows = allshows
+    } else {
+        selectedShows = allshows.filter(show => show.type.replace(" ", "").toLowerCase() == e.target.id)
+    }
+    displayAllMovies(selectedShows)
+    displayNumber(selectedShows, allshows)
 });
-
-typeSelectBox.addEventListener("click", (e) => {
-    if (e.target && e.target.matches("input.scripted") && selected == true) {
-        fetch("http://api.tvmaze.com/shows")
-            .then(res => res.json())
-            .then(shows => {
-                displayAllMovies(shows)
-                selected = false
-            })
-    }
-    if (e.target && e.target.matches("input.reality") && selected == true) {
-        fetch("http://api.tvmaze.com/shows")
-            .then(res => res.json())
-            .then(shows => {
-                displayAllMovies(shows)
-                selected = false
-            })
-    }
-    if (e.target && e.target.matches("input.animation") && selected == true) {
-        fetch("http://api.tvmaze.com/shows")
-            .then(res => res.json())
-            .then(shows => {
-                displayAllMovies(shows)
-                selected = false
-            })
-    }
-    if (e.target && e.target.matches("input.talkshow") && selected == true) {
-        fetch("http://api.tvmaze.com/shows")
-            .then(res => res.json())
-            .then(shows => {
-                displayAllMovies(shows)
-                selected = false
-            })
-    }
-    if (e.target && e.target.matches("input.documentary") && selected == true) {
-        fetch("http://api.tvmaze.com/shows")
-            .then(res => res.json())
-            .then(shows => {
-                displayAllMovies(shows)
-                selected = false
-            })
-    }
-})
-
-
-//SELECT SHOW GENRES 
-
-function selectGenresType(shows) {
-    let types = [];
-    shows.forEach(p => {
-        types.push(p.genres)
-    })
-    let typeObjet = types.reduce(function (acc, curr) {
-        if (typeof acc[curr] == 'undefined') {
-            acc[curr] = 1;
-        } else {
-            acc[curr] += 1;
-        }
-        return acc;
-    }, {});
-    let showGenres = Object.keys(typeObjet)
-    let genresNumbers = Object.values(typeObjet)
-    showGenres.forEach((p, i) => {
-        let selectGenresDiv = createElement("div", "ui checkbox")
-        let selectGenresInput = createElement("input", "checkbox")
-        selectGenresInput.setAttribute("type", "checkbox")
-        let selectGenresLabel = createElement("label", "genres_label")
-        selectGenresLabel.appendChild(selectGenresInput)
-        selectGenresDiv.appendChild(selectGenresLabel)
-        genresSelectBox.appendChild(selectGenresDiv)
-        selectGenresLabel.innerText = `${p}(${genresNumbers[i]})`
-    }
-    )
-}
-
-
 
 
 
 //SEARCH FUNCTION 
 let searchForm = document.getElementById("search_form")
 searchForm.addEventListener("input", handleSearch)
+
 function handleSearch(e) {
     const searchWord = e.target.value.toLowerCase()
-    let shows = [...main.children]
-    shows.forEach(show => {
-        const showText = show.innerText.toLowerCase()
-        if (showText.indexOf(searchWord) < 0) {
-            show.style.display = 'none'
-        } else {
-            show.style.display = 'flex'
-        }
+    let filtered = allshows.filter(showText => {
+        return (showText.summary + showText.name).toLowerCase().includes(searchWord)
     })
-    let filtered = shows.filter(ep => getComputedStyle(ep).display == "flex")
-    displayNumber(filtered, shows)
+    displayNumber(filtered, allshows)
+    displayAllMovies(filtered)
 }
 
 //Display Episode Number
-let episodeNumber = document.querySelector("#display_number p")
 function displayNumber(displayed, all) {
+    let episodeNumber = document.querySelector("#display_number p")
     episodeNumber.innerText = `Displaying ${displayed.length} / ${all.length} episodes`
 }
 
@@ -294,28 +251,162 @@ function createImage(src) {
 function compareDate(a, b) {
     const dateA = a.premiered;
     const dateB = b.premiered
-    let comparison = 0;
-    if (dateA < dateB) {
-        comparison = 1;
-    } else if (dateA > dateB) {
-        comparison = -1;
+    if (dateA > dateB) {
+        return -1;
     }
-    return comparison;
 }
-
 
 function compareRate(a, b) {
     const ratingA = a.rating.average;
     const ratingB = b.rating.average
-    let comparison = 0;
-    if (ratingA < ratingB) {
-        comparison = 1;
-    } else if (ratingA > ratingB) {
-        comparison = -1;
+    if (ratingA > ratingB) {
+        return -1
     }
-    return comparison;
+}
+window.onload = fetchedData
+
+
+//GET SHOW SEASONS
+
+
+showMainDiv.addEventListener("click", e => {
+    let element = e.target.parentElement
+    let showName = element.querySelector("h2").textContent
+    allshows.forEach(show => {
+        if (show.name == showName) {
+            fetch(`https://api.tvmaze.com/shows/${show.id}/seasons`)
+                .then(res => res.json())
+                .then(seasons => {
+                    displayShowOnSeasonPage(showName)
+                    displaySeasons(seasons)
+                })
+            fetch(`https://api.tvmaze.com/shows/${show.id}/cast`)
+                .then(res => res.json())
+                .then(casts => {
+                    console.log(casts)
+                    displayCastsOnSeasonPage(casts)
+                })
+        }
+    })
+})
+
+function displaySeasons(show) {
+    main.style.display = "none"
+    side.style.display = "none"
+    sortForm.style.display = "none"
+    space.style.display = "none"
+    searchForm.style.display = "none"
+    seasonScreen.style.display = "flex"
+    episodeNumber = ""
+
+    createSeasonBox(show)
+}
+
+function displayShowOnSeasonPage(showname) {
+    selectedShow = allshows.filter(p => p.name == showname)
+    console.log(selectedShow[0])
+    const showCastBox = createElement("div", "showCastBox")
+    const showImage = createElement("img", "showImage")
+    showImage.src = selectedShow[0].image.medium
+    const showSummary = createElement("p", "showSummary")
+    showSummary.innerHTML = selectedShow[0].summary
+    const detailBox = createElement("div", "detailBox")
+    const summaryCastBox = createElement("div", "summaryCastBox")
+    const castBox = createElement("div", "castBox")
+    const rating = createElement("h3", "rating")
+    rating.innerHTML = `Rating: <span>${selectedShow[0].rating.average}</span>`
+    const genres = createElement("h3", "genres")
+    genres.innerHTML = `Genres: <span> ${selectedShow[0].genres}</span>`
+    const status = createElement("h3", "status")
+    status.innerHTML = `Status:<span> ${selectedShow[0].status}</span>`
+    const runtime = createElement("h3", "runtime")
+    runtime.innerHTML = `Duration: <span>${selectedShow[0].runtime}</span>`
+    detailBox.appendChild(rating)
+    detailBox.appendChild(genres)
+    detailBox.appendChild(status)
+    detailBox.appendChild(runtime)
+    summaryCastBox.appendChild(showSummary)
+    summaryCastBox.appendChild(castBox)
+    showCastBox.appendChild(showImage)
+    showCastBox.appendChild(summaryCastBox)
+    showCastBox.appendChild(detailBox)
+    seasonScreen.appendChild(showCastBox)
+}
+
+function createSeasonBox(show) {
+    const seasonsBox = createElement("div", "seasonsBox")
+    show.forEach(season => {
+        const seasonBox = createElement("div", "seasonBox")
+        const seasonInBox = createElement("div", "seasonInBox")
+        const seasonDownBox = createElement("div", "seasonDownBox")
+        const seasonNumberBox = createElement("div", "seasonNumberBox")
+        const image = createElement("img", "src")
+        const summary = createElement("h3", "summary")
+        const description = createElement("p", "description")
+        const seasonNumberDate = createElement("h2", "seasonNumber")
+        const episodeOrder = createElement("h3", "episodeOrder")
+        summary.innerText = "Summary"
+        season.summary == "" || season.summary == null ? description.innerHTML = "We don't have a summary yet. Hang in there, or go ahead and contribute one." : description.innerHTML = season.summary
+        seasonNumberDate.innerText = `Season ${season.number} (${season.endDate.slice(0, 4)})`
+        image.src = season.image.medium
+        episodeOrder.innerText = `Episode number (${season.episodeOrder})`
+        seasonNumberBox.appendChild(seasonNumberDate)
+        seasonDownBox.appendChild(seasonNumberBox)
+        seasonDownBox.appendChild(episodeOrder)
+        seasonDownBox.appendChild(summary)
+        seasonDownBox.appendChild(description)
+        seasonBox.appendChild(seasonInBox)
+        seasonBox.appendChild(image)
+        seasonBox.appendChild(seasonDownBox)
+        seasonsBox.appendChild(seasonBox)
+        seasonScreen.appendChild(seasonsBox)
+    })
 }
 
 
+function displayEpisodes(episodeList) {
+    let seasonScreen = document.querySelectorAll(".seasonScreen")
+    main.innerHTML = ""
+    // seasonScreen.style.display = "none"
+    episodeList.map(episode => {
+        const epsBox = document.createElement("div")
+        const image = document.createElement("img")
+        const textBox = document.createElement("div")
+        const epsName = document.createElement("h2")
+        const description = document.createElement("p")
+        epsBox.className += ("showbox")
+        image.src = episode.image.medium
+        // epsName.innerText = `${episode.name}-S${episode.season.toString().padStart(2, "0")}E${episode.number.toString().padStart(2, "0")}`
+        description.innerHTML = episode.summary
+        epsBox.appendChild(image)
+        textBox.appendChild(epsName)
+        textBox.appendChild(description)
+        epsBox.appendChild(textBox)
+        main.appendChild(epsBox)
+    })
+}
 
-window.onload = fetchedData
+function displayCastsOnSeasonPage(casts) {
+    const castsBox = createElement("div", "castsBox")
+    casts.forEach((cast, index) => {
+        if (index < 5) {
+            const castBox = createElement("div", "castBox")
+            const castImage = createElement("img", "castImage")
+            const castCharacterName = createElement("h5", "castCharacterName")
+            const castPersonName = createElement("h6", "castPersonName")
+            if (cast.character.image.medium) {
+                castImage.src = cast.character.image.medium
+            } else {
+                castImage.alt = cast.character.name
+            }
+            castCharacterName.innerText = cast.character.name
+            castPersonName.innerText = cast.person.name
+            castBox.appendChild(castCharacterName)
+            castBox.appendChild(castImage)
+            castBox.appendChild(castPersonName)
+            castsBox.appendChild(castBox)
+            seasonScreen.appendChild(castsBox)
+        }
+    })
+}
+
