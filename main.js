@@ -1,4 +1,5 @@
 const main = document.querySelector("#main_boxes");
+const logo =document.getElementById("logo")
 const side = document.querySelector("#main_side");
 const mrShowBox = document.querySelectorAll(".box");
 const image = document.querySelectorAll(".box img");
@@ -30,6 +31,8 @@ function fetchedData() {
             }
         });
 }
+
+
 
 //CREATE NEW ELEMENT
 
